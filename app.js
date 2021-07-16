@@ -60,6 +60,30 @@ class UI {
         });
         productsDOM.innerHTML = result;
     }
+
+    // getBagButton
+    getBagButtons() {
+        const buttons = [...document.querySelectorAll(".bag-btn")];
+        buttons.forEach((button) => {
+            let id = button.dataset.id;
+            let inCart = cart.find((item) => item.id === id);
+            if (inCart) {
+                button.innerText = "In Cart";
+                button.disabled = true;
+            } else {
+                button.addEventListener("click", (event) => {
+                    event.target.innerText = "In Cart";
+                    event.target.disabled = true;
+                    // get product from products
+                    // add product from products
+                    // save cart in local storage
+                    // set cart values
+                    // display cart item
+                    // show cart
+                });
+            }
+        });
+    }
 }
 
 // Local storage
@@ -74,8 +98,13 @@ document.addEventListener("DOMContentLoaded", () => {
     const products = new Products();
 
     // get all products
-    products.getProducts().then((products) => {
-        ui.displayProducts(products);
-        Storage.saveProducts(products);
-    });
+    products
+        .getProducts()
+        .then((products) => {
+            ui.displayProducts(products);
+            Storage.saveProducts(products);
+        })
+        .then(() => {
+            ui.getBagButtons();
+        });
 });
