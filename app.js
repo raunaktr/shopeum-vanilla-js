@@ -35,14 +35,47 @@ class Products {
 }
 
 // UI products
-class UI {}
+class UI {
+    displayProducts(products) {
+        let result = "";
+        products.forEach((product) => {
+            result += `
+            <!-- Single Product starts -->
+                <article class="product">
+                    <div class="img-container">
+                        <img
+                            src=${product.image}
+                            alt="product"
+                            class="product-img"
+                        />
+                        <button class="bag-btn" data-id=${product.id}>
+                            <i class="fas fa-shopping-cart"> Add to Cart </i>
+                        </button>
+                    </div>
+                    <h3>${product.title}</h3>
+                    <h4>₹ ${product.price}</h4>
+                </article>
+                <!-- end of Single Product -->
+            `;
+        });
+        productsDOM.innerHTML = result;
+    }
+}
 
 // Local storage
-class Storage {}
+class Storage {
+    static saveProducts(products) {
+        localStorage.setItem("products", JSON.stringify(products));
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const ui = new UI();
     const products = new Products();
+
     // get all products
-    products.getProducts().then((data) => console.log(data));
+    products.getProducts().then((products) => {
+        ui.displayProducts(products);
+        Storage.saveProducts(products);
+    });
 });
