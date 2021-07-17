@@ -10,8 +10,10 @@ const cartTotal = document.querySelector(".cart-total");
 const cartContent = document.querySelector(".cart-content");
 const productsDOM = document.querySelector(".products-center");
 
-//
+// cart
 let cart = [];
+// buttons
+let buttonsDOM = [];
 
 // getting the products
 class Products {
@@ -64,24 +66,26 @@ class UI {
     // getBagButton
     getBagButtons() {
         const buttons = [...document.querySelectorAll(".bag-btn")];
+        buttonsDOM = buttons;
         buttons.forEach((button) => {
             let id = button.dataset.id;
             let inCart = cart.find((item) => item.id === id);
             if (inCart) {
                 button.innerText = "In Cart";
                 button.disabled = true;
-            } else {
-                button.addEventListener("click", (event) => {
-                    event.target.innerText = "In Cart";
-                    event.target.disabled = true;
-                    // get product from products
-                    // add product from products
-                    // save cart in local storage
-                    // set cart values
-                    // display cart item
-                    // show cart
-                });
             }
+            button.addEventListener("click", (event) => {
+                event.target.innerText = "In Cart";
+                event.target.disabled = true;
+                // get product from products
+                let cartItem = Storage.getProduct(id);
+                console.log(cartItem);
+                // add product from products
+                // save cart in local storage
+                // set cart values
+                // display cart item
+                // show cart
+            });
         });
     }
 }
@@ -90,6 +94,10 @@ class UI {
 class Storage {
     static saveProducts(products) {
         localStorage.setItem("products", JSON.stringify(products));
+    }
+    static getProduct(id) {
+        let products = JSON.parse(localStorage.getItem("products"));
+        return products.find((product) => product.id === id);
     }
 }
 
