@@ -132,6 +132,14 @@ class UI {
         `;
         cartContent.append(div);
     }
+    /**
+     * @type [showCart]
+     * @params none
+     */
+    showCart() {
+        cartOverlay.classList.add("transparentBcg");
+        cartDOM.classList.add("showCart");
+    }
 }
 
 // Local storage
