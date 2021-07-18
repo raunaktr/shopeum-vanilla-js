@@ -89,6 +89,7 @@ class UI {
                 // display cart item
                 this.addCartItem(cartItem);
                 // show cart
+                this.showCart();
             });
         });
     }
@@ -125,7 +126,7 @@ class UI {
         </div>
         <div>
             <i class="fas fa-chevron-up" data-id=${item.id}></i>
-            <p class="item-amount">data-id=${item.amount}</p>
+            <p class="item-amount"data-id=${item.amount}></p>
             <i class="fas fa-chevron-down" data-id=${item.id}></i>
         </div>
         `;
