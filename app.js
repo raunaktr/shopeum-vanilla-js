@@ -77,6 +77,7 @@ class UI {
             button.addEventListener("click", (event) => {
                 event.target.innerText = "In Cart";
                 event.target.disabled = true;
+
                 // get product from products
                 let cartItem = { ...Storage.getProduct(id), amount: 1 };
                 // add product from products
@@ -84,10 +85,28 @@ class UI {
                 // save cart in local storage
                 Storage.saveCart(cart);
                 // set cart values
+                this.setCartValues(cart);
                 // display cart item
                 // show cart
             });
         });
+    }
+    /**
+     * @type setCartValues
+     * @params cart
+     * this function is responsible for adding temporary total, and
+     * amount of an item in cart
+     */
+    setCartValues(cart) {
+        let tmpTotal = 0;
+        let itemsTotal = 0;
+        cart.map((item) => {
+            tmpTotal += item.price * item.amount;
+            itemsTotal += item.amount;
+        });
+        cartTotal.innerText = parseFloat(tmpTotal.toFixed(2));
+        cartItems.innerText = itemsTotal;
+        console.log(cartTotal, cartItems);
     }
 }
 
