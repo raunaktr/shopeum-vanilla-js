@@ -111,8 +111,10 @@ class UI {
     }
 
     /**
-     * @type method
+     * @type addCartItem
      * @params item
+     * this method is responsible for showing innerHTML
+     * when an item is added to cart
      */
     addCartItem(item) {
         const div = document.createElement("div");
@@ -164,10 +166,63 @@ class UI {
     }
     /**
      * @type populateCart
+     * @params cart
      * will check local storage for items already in cart
      */
     populateCart(cart) {
         cart.forEach((item) => this.addCartItem(item));
+    }
+
+    /**
+     * @type populateCart
+     */
+    cartLogic() {
+        // clear cart button
+        clearCartBtn.addEventListener("click", () => {
+            this.clearCart();
+        });
+        // cart functinality
+    }
+    /**
+     * @type clearCart
+     * will check for id's of item
+     * will remove only item's present in the cart
+     * remove all content's of a cart until the cart is empty
+     * will reset the total to zero
+     */
+    clearCart() {
+        let cartItems = cart.map((item) => item.id);
+        cartItems.forEach((id) => this.removeItem(id));
+        while (cartContent.children.length > 0) {
+            cartContent.removeChild(cartContent.children[0]);
+        }
+        this.hideCart();
+    }
+    /**
+     * @type removeItem
+     * @params id
+     * will filter out item's which are not present in cart
+     * will remove that item from the local storage
+     * will change the button to 'add to cart' from 'in cart'
+     */
+
+    removeItem(id) {
+        cart = cart.filter((item) => item.id !== id);
+        this.setCartValues(cart);
+        Storage.saveCart(cart);
+        let button = this.getSingleButton(id);
+        button.disabled = false;
+        button.innerText = `
+        <i class="fas fa-shopping-cart"></i>Add to cart
+        `;
+    }
+    /**
+     * @type getSingleButton
+     * @params id
+     * will return a unique button associated with an id
+     */
+    getSingleButton(id) {
+        return buttonsDOM.find((button) => button.dataset.id === id);
     }
 }
 
@@ -205,5 +260,6 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(() => {
             ui.getBagButtons();
+            ui.cartLogic();
         });
 });
