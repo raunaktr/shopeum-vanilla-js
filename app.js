@@ -51,7 +51,7 @@ class UI {
                             class="product-img"
                         />
                         <button class="bag-btn" data-id=${product.id}>
-                            <i class="fas fa-shopping-cart"> Add to Cart </i>
+                            <i class="fas fa-shopping-cart">Add to Cart</i>
                         </button>
                     </div>
                     <h3>${product.title}</h3>
@@ -174,7 +174,14 @@ class UI {
     }
 
     /**
-     * @type populateCart
+     * @type cartLogic
+     * this method has primarily two functionalities
+     * - clear cart button which is linked to a click event
+     * - cartContent which listen to a click event
+     *      - on clicking "remove" button, parent-to-parent element is removed
+     *      - on clicking "fa-chevron-up", item is incremented in cart, amount is incremented and in localStorage
+     *      - on clicking "fa-chevron-down", item is lowered in cart, amount is lowered and in localStorage
+
      */
     cartLogic() {
         // clear cart button
@@ -182,6 +189,39 @@ class UI {
             this.clearCart();
         });
         // cart functinality
+        cartContent.addEventListener("click", (event) => {
+            if (event.target.classList.contains("remove-item")) {
+                let removeItem = event.target;
+                let id = removeItem.dataset.id;
+                cartContent.removeChild(removeItem.parentElement.parentElement);
+                this.removeItem(id);
+            } else if (event.target.classList.contains("fa-chevron-up")) {
+                let addAmount = event.target;
+                let id = addAmount.dataset.id;
+                let tmpItem = cart.find((item) => item.id === id);
+                tmpItem.amount += 1;
+                Storage.saveCart(cart);
+                this.setCartValues(cart);
+
+                addAmount.nextElementSibling.innerText = tmpItem.amount;
+            } else if (event.target.classList.contains("fa-chevron-down")) {
+                let lowerAmount = event.target;
+                let id = lowerAmount.dataset.id;
+                let tmpItem = cart.find((item) => item.id === id);
+                tmpItem.amount -= 1;
+                if (tmpItem.amount > 0) {
+                    Storage.saveCart(cart);
+                    this.setCartValues(cart);
+                    lowerAmount.previousElementSibling.innerText =
+                        tmpItem.amount;
+                } else {
+                    cartContent.removeChild(
+                        lowerAmount.parentElement.parentElement
+                    );
+                    this.removeItem(id);
+                }
+            }
+        });
     }
     /**
      * @type clearCart
@@ -212,8 +252,8 @@ class UI {
         Storage.saveCart(cart);
         let button = this.getSingleButton(id);
         button.disabled = false;
-        button.innerText = `
-        <i class="fas fa-shopping-cart"></i>Add to cart
+        button.innerHTML = `
+        <i class="fas fa-shopping-cart">Add to Cart</i>
         `;
     }
     /**
