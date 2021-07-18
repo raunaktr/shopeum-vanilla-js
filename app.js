@@ -126,7 +126,7 @@ class UI {
         </div>
         <div>
             <i class="fas fa-chevron-up" data-id=${item.id}></i>
-            <p class="item-amount"data-id=${item.amount}></p>
+            <p class="item-amount"data-id=${item.amount}>${item.amount}</p>
             <i class="fas fa-chevron-down" data-id=${item.id}></i>
         </div>
         `;
@@ -139,6 +139,35 @@ class UI {
     showCart() {
         cartOverlay.classList.add("transparentBcg");
         cartDOM.classList.add("showCart");
+    }
+    /**
+     * @type [hideCart]
+     * @params none
+     */
+    hideCart() {
+        cartOverlay.classList.remove("transparentBcg");
+        cartDOM.classList.remove("showCart");
+    }
+
+    /**
+     * @type setupAPP
+     * will check local storage for items already in cart
+     * @if item is already present in cart, @type [populateCart] will be called
+     * @else zero value will be displayed
+     */
+    setupAPP() {
+        cart = Storage.getCart();
+        this.setCartValues(cart);
+        this.populateCart(cart);
+        cartBtn.addEventListener("click", this.showCart);
+        closeCartBtn.addEventListener("click", this.hideCart);
+    }
+    /**
+     * @type populateCart
+     * will check local storage for items already in cart
+     */
+    populateCart(cart) {
+        cart.forEach((item) => this.addCartItem(item));
     }
 }
 
@@ -154,11 +183,18 @@ class Storage {
     static saveCart(cart) {
         localStorage.setItem("cart", JSON.stringify(cart));
     }
+    static getCart() {
+        return localStorage.getItem("cart")
+            ? JSON.parse(localStorage.getItem("cart"))
+            : [];
+    }
 }
 
 document.addEventListener("DOMContentLoaded", () => {
     const ui = new UI();
     const products = new Products();
+    // setup Application
+    ui.setupAPP();
 
     // get all products
     products
