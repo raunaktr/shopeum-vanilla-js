@@ -90,7 +90,7 @@ class UI {
         buttonsDOM = buttons;
         buttons.forEach((button) => {
             let id = button.dataset.id;
-            let inCart = cart.find((item) => item.id === id);
+            let inCart = cart.find((item) => item.id !== id);
             if (inCart) {
                 button.innerText = "In Cart";
                 button.disabled = true;
